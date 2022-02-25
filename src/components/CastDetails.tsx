@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {useDarkMode} from '../context/ThemeContext';
 import {Cast} from '../interfaces/creditsInterface';
 import CastItem from './CastItem';
 
@@ -8,9 +9,10 @@ interface Props {
 }
 
 export default function CastDetails({cast}: Props) {
+  const {colors} = useDarkMode();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Actores</Text>
+      <Text style={{...styles.title, color: colors.text}}>Actores</Text>
       <FlatList
         contentContainerStyle={styles.containerFlatlist}
         horizontal
@@ -30,7 +32,6 @@ const styles = StyleSheet.create({
   containerFlatlist: {paddingHorizontal: 20},
   title: {
     fontSize: 16,
-    color: '#fff',
     fontWeight: '700',
     marginHorizontal: 20,
     letterSpacing: 0.5,

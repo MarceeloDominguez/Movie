@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import Error from '../components/Error';
+import HeaderHome from '../components/HeaderHome';
 import HorizontalSlider from '../components/HorizontalSlider';
 import Loading from '../components/Loading';
 import MoviesPoster from '../components/MoviesPoster';
 import Search from '../components/Search';
+import {useDarkMode} from '../context/ThemeContext';
 import {useGenreMovies} from '../hooks/useGenreMovies';
 import {useGenres} from '../hooks/useGenres';
 import {useMovies} from '../hooks/useMovies';
@@ -20,9 +22,10 @@ import {useMovies} from '../hooks/useMovies';
 const WIDTH = Dimensions.get('window').width;
 
 export default function HomeScreen() {
+  const {colors} = useDarkMode();
+
   const [genreSelected, setGenreSelected] = useState(28);
   const {nowPlaying, popular, topRated, upcoming, isLoading} = useMovies();
-
   const {genreList, error} = useGenres();
   const {
     genreMovies,
@@ -35,9 +38,12 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{backgroundColor: colors.background}}>
+      <HeaderHome />
       <Search />
-      <Text style={styles.title}>Categorias</Text>
+      <Text style={{...styles.title, color: colors.text}}>Categorias</Text>
       {error && <Error />}
       <ScrollView
         horizontal
@@ -52,7 +58,7 @@ export default function HomeScreen() {
               styles.button,
               {
                 backgroundColor:
-                  item.id === genreSelected ? 'red' : 'rgba(255,255,355,0.1)',
+                  item.id === genreSelected ? 'red' : colors.card,
               },
             ]}>
             <Text style={styles.nameButton}>{item.name}</Text>
@@ -94,16 +100,13 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#1f1f1f',
-  },
   title: {
     fontSize: 18,
     color: '#fff',
     marginLeft: 10,
     marginBottom: 10,
     fontWeight: 'bold',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   containerButton: {
     marginBottom: 22,

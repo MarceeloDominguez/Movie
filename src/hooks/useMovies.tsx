@@ -20,6 +20,7 @@ export const useMovies = () => {
   });
 
   const getMovies = async () => {
+    setIsLoading(true);
     const nowPlayingPromise = await fetch(
       `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=es-ES`,
     ).then(res => res.json());

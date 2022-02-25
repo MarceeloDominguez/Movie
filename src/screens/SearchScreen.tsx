@@ -6,16 +6,27 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SearchResult from '../components/SearchResult';
+import {useDarkMode} from '../context/ThemeContext';
 import {useDebounceValue} from '../hooks/useDebounceValue';
 import useSearchMovie from '../hooks/useSearchMovie';
 
 export default function SearchScreen() {
+  const {colors} = useDarkMode();
   const [textValue, setTextValue] = useState('');
   const deboncedValue = useDebounceValue(textValue);
-  const {movieResults} = useSearchMovie(deboncedValue);
+  const {movieResults, isLoading} = useSearchMovie(deboncedValue);
+
+  const renderLoader = () => {
+    return isLoading ? (
+      <View>
+        <ActivityIndicator size="large" color="red" />
+      </View>
+    ) : null;
+  };
 
   return (
     <KeyboardAvoidingView style={styles.keyboard} keyboardVerticalOffset={150}>
@@ -23,13 +34,22 @@ export default function SearchScreen() {
         <View style={styles.containerInput}>
           <TextInput
             placeholder="Buscar película..."
-            style={styles.input}
-            placeholderTextColor="#fff"
+            style={{
+              ...styles.input,
+              borderColor: colors.border,
+              color: colors.text,
+            }}
+            placeholderTextColor={colors.text}
             autoFocus
             value={textValue}
             onChangeText={setTextValue}
           />
-          <Icon size={20} name="search" style={styles.icon} />
+          <Icon
+            size={20}
+            name="search"
+            style={styles.icon}
+            color={colors.text}
+          />
         </View>
       </ScrollView>
       <FlatList
@@ -38,6 +58,7 @@ export default function SearchScreen() {
         renderItem={({item}) => <SearchResult movies={item} />}
         numColumns={2}
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={renderLoader}
       />
     </KeyboardAvoidingView>
   );
@@ -56,7 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 42,
     borderWidth: 2,
-    borderColor: '#ffffff32',
+    borderColor: 'red',
     paddingLeft: 12,
     letterSpacing: 0.5,
     fontSize: 12,
@@ -68,7 +89,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 12,
     top: 12,
-    color: '#fff',
     opacity: 0.5,
   },
 });

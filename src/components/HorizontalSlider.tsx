@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import {Movie} from '../interfaces/movieInterface';
 import MoviesPoster from './MoviesPoster';
+import {useDarkMode} from '../context/ThemeContext';
 
 interface Props {
   movies: Movie[];
@@ -9,9 +10,13 @@ interface Props {
 }
 
 export default function HorizontalSlider({movies, title}: Props) {
+  const {colors} = useDarkMode();
+
   return (
     <View style={styles.container}>
-      {title && <Text style={styles.title}>{title}</Text>}
+      {title && (
+        <Text style={{...styles.title, color: colors.text}}>{title}</Text>
+      )}
       <FlatList
         data={movies}
         keyExtractor={(item, index) => index.toString()}
@@ -37,7 +42,6 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     paddingLeft: 10,
     fontWeight: 'bold',
-    color: '#fff',
     marginTop: 10,
     marginBottom: 10,
     fontSize: 14,

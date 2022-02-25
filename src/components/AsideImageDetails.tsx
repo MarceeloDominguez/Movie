@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {MovieFull} from '../interfaces/movieInterface';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useDarkMode} from '../context/ThemeContext';
 
 interface Props {
   movieFull: MovieFull;
@@ -9,6 +10,7 @@ interface Props {
 
 export default function AsideImageDetails({movieFull}: Props) {
   const {vote_average} = movieFull;
+  const {colors} = useDarkMode();
 
   const convertMinsToTime = (mins: number) => {
     let hours = Math.floor(mins / 60);
@@ -19,35 +21,37 @@ export default function AsideImageDetails({movieFull}: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.containerSquare}>
-        <Text style={styles.TextGenres}>Géneros</Text>
+      <View style={{...styles.containerSquare, borderColor: colors.border}}>
+        <Text style={{...styles.TextGenres, color: colors.text}}>Géneros</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.genres}>
+          <Text style={{...styles.genres, color: colors.text}}>
             {movieFull.genres.map(g => g.name).join(', ')}
           </Text>
         </ScrollView>
       </View>
-      <View style={styles.containerSquare}>
-        <Text style={styles.duration}>Duración</Text>
+      <View style={{...styles.containerSquare, borderColor: colors.border}}>
+        <Text style={{...styles.duration, color: colors.text}}>Duración</Text>
         <Icon
           name="time-outline"
           size={16}
-          color="#fff"
+          color={colors.text}
           style={styles.iconClock}
         />
-        <Text style={styles.runtime}>
+        <Text style={{...styles.runtime, color: colors.text}}>
           {convertMinsToTime(movieFull.runtime)}
         </Text>
       </View>
-      <View style={styles.containerSquare}>
-        <Text style={styles.textRating}>Rating</Text>
+      <View style={{...styles.containerSquare, borderColor: colors.border}}>
+        <Text style={{...styles.textRating, color: colors.text}}>Rating</Text>
         <Icon
           name="star-sharp"
           size={16}
           color="#ffc205"
           style={styles.rating}
         />
-        <Text style={styles.vote}>{vote_average}/10</Text>
+        <Text style={{...styles.vote, color: colors.text}}>
+          {vote_average}/10
+        </Text>
       </View>
     </View>
   );
@@ -61,7 +65,6 @@ const styles = StyleSheet.create({
   },
   containerSquare: {
     borderWidth: 1,
-    borderColor: '#ffffff32',
     borderRadius: 8,
     height: 90,
     alignItems: 'center',
@@ -69,14 +72,12 @@ const styles = StyleSheet.create({
   TextGenres: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#fff',
     lineHeight: 22,
     letterSpacing: 0.5,
   },
   genres: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#fff',
     letterSpacing: 0.5,
     textAlignVertical: 'center',
     borderRadius: 4,
@@ -90,21 +91,18 @@ const styles = StyleSheet.create({
   runtime: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#fff',
     lineHeight: 22,
     letterSpacing: 0.5,
   },
   duration: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#fff',
     lineHeight: 22,
     letterSpacing: 0.5,
   },
   textRating: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#fff',
     lineHeight: 22,
     letterSpacing: 0.5,
   },
@@ -114,7 +112,6 @@ const styles = StyleSheet.create({
   vote: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#fff',
     lineHeight: 22,
     letterSpacing: 0.5,
   },

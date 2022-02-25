@@ -1,14 +1,16 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DetailsScreen from '../screens/DetailsScreen';
 import SearchScreen from '../screens/SearchScreen';
 import {Movie} from '../interfaces/movieInterface';
+import {useDarkMode} from '../context/ThemeContext';
 
 export type RootStackParams = {
   Tabs: undefined;
@@ -20,12 +22,17 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParams>();
 
 const Tabs = () => {
+  const {colors} = useDarkMode();
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarActiveTintColor: 'red',
-        tabBarInactiveTintColor: '#fff',
-        tabBarStyle: {...styles.tabBarStyle},
+        tabBarInactiveTintColor: colors.text,
+        tabBarStyle: {
+          ...styles.tabBarStyle,
+          backgroundColor: colors.background,
+        },
         tabBarShowLabel: false,
         headerShown: false,
         tabBarIcon: ({color, focused}) => {
@@ -38,7 +45,7 @@ const Tabs = () => {
               iconName = 'heart-outline';
               break;
             case 'ProfileScreen':
-              iconName = 'person';
+              iconName = 'person-outline';
               break;
           }
           return (
@@ -65,39 +72,56 @@ const Tabs = () => {
 };
 
 export default function Navigation() {
+  const {colors, isDarkTheme} = useDarkMode();
+
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Tabs"
-        component={Tabs}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="DetailsScreen"
-        component={DetailsScreen}
-        options={{
-          headerShown: false,
-          contentStyle: {backgroundColor: '#1f1f1f'},
-        }}
-      />
-      <Stack.Screen
-        name="SearchScreen"
-        component={SearchScreen}
-        options={{
-          headerShown: false,
-          contentStyle: {backgroundColor: '#1f1f1f'},
-        }}
-      />
-    </Stack.Navigator>
+    <View style={{flex: 1, backgroundColor: colors.background}}>
+      {isDarkTheme ? (
+        <StatusBar
+          backgroundColor={colors.background}
+          barStyle="dark-content"
+        />
+      ) : (
+        <StatusBar
+          backgroundColor={colors.background}
+          barStyle="light-content"
+        />
+      )}
+
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Tabs"
+            component={Tabs}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="DetailsScreen"
+            component={DetailsScreen}
+            options={{
+              headerShown: false,
+              contentStyle: {backgroundColor: colors.background},
+            }}
+          />
+          <Stack.Screen
+            name="SearchScreen"
+            component={SearchScreen}
+            options={{
+              headerShown: false,
+              contentStyle: {backgroundColor: colors.background},
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   tabBarStyle: {
     elevation: 0,
-    backgroundColor: '#1f1f1f',
     borderTopWidth: 0,
   },
   containerIcon: {
